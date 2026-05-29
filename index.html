@@ -1,10 +1,49 @@
 HTML
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>나의 주문 시스템</title>
+    <meta charset="UTF-8">
+    <title>초간단 카페 주문 테스트</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <h1>안녕하세요! 카페 주문 사이트입니다.</h1>
+
+    <h1>☕ 실시간 주문 테스트</h1>
+    <button onclick="sendOrder('아메리카诺', 4500)">아메리카노 주문하기</button>
+    <button onclick="sendOrder('카페라떼', 5000)">카페라떼 주문하기</button>
+
+    <script>
+        // 🔥 4단계에서 복사한 본인의 firebaseConfig를 여기에 붙여넣으세요!
+        const firebaseConfig = {
+    apiKey: "AIzaSyC_2WEQZzWUZX4blEGETu1C_hidcJiSclg",
+    authDomain: "bugong-cafe.firebaseapp.com",
+    projectId: "bugong-cafe",
+    storageBucket: "bugong-cafe.firebasestorage.app",
+    messagingSenderId: "657732408572",
+    appId: "1:657732408572:web:add0dc601a1ebbf9ddf379",
+    measurementId: "G-D4EZ8GJD7P"
+  };
+
+        // Firebase 초기화
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 손님이 버튼을 누르면 Firestore 데이터베이스로 주문을 전송하는 함수
+        function sendOrder(menuName, price) {
+            db.collection("orders").add({
+                menu: menuName,
+                price: price,
+                status: "주문접수",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert(menuName + " 주문이 정상적으로 완료되었습니다! Firestore 'orders' 탭을 확인해 보세요.");
+            })
+            .catch((error) => {
+                alert("주문 실패: " + error);
+            });
+        }
+    </script>
 </body>
 </html>
